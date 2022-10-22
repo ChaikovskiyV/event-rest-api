@@ -11,17 +11,18 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@Table(name = "events")
 public class Event extends BaseEntity {
     private String topic;
     private String description;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "events_organizers",
             joinColumns = @JoinColumn(name = "event_id"),
             inverseJoinColumns = @JoinColumn(name = "organizer_id"))
     private Set<Organizer> organizers;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime eventDate;
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "address_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Address address;
@@ -84,8 +85,9 @@ public class Event extends BaseEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Event event = (Event) o;
-        return topic.equals(event.topic) && description.equals(event.description) &&
-                organizers.equals(event.organizers) && eventDate.equals(event.eventDate) && address.equals(event.address);
+        return Objects.equals(topic, event.topic) && Objects.equals(description, event.description) &&
+                Objects.equals(organizers, event.organizers) && Objects.equals(eventDate, event.eventDate) &&
+                Objects.equals(address, event.address);
     }
 
     @Override
