@@ -6,50 +6,63 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
-public class AddressDto {
+public class AddressDto implements BaseDto {
 
     @NotEmpty(message = "A city name can't be empty.")
     @Length(min = 3, max = 20, message = "A city name length has to be from 3 to 20 symbols.")
     @Pattern(regexp = "\\w*", message = "A city name has to contain only letters.")
-    private String city;
+    private String addressCity;
 
     @NotEmpty(message = "A street name can't be empty.")
     @Length(min = 3, max = 20, message = "A street name length has to be from 3 to 20 symbols.")
     @Pattern(regexp = "\\w*", message = "A street name has to contain only letters.")
-    private String street;
+    private String addressStreet;
     @Min(value = 1, message = "House number has to be positive.")
-    private int houseNumber;
+    private int addressHouseNumber;
 
     public AddressDto() {
     }
 
-    public AddressDto(String city, String street, int houseNumber) {
-        this.city = city;
-        this.street = street;
-        this.houseNumber = houseNumber;
+    public AddressDto(String addressCity, String addressStreet, int addressHouseNumber) {
+        this.addressCity = addressCity;
+        this.addressStreet = addressStreet;
+        this.addressHouseNumber = addressHouseNumber;
     }
 
-    public String getCity() {
-        return city;
+    public String getAddressCity() {
+        return addressCity;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setAddressCity(String addressCity) {
+        this.addressCity = addressCity;
     }
 
-    public String getStreet() {
-        return street;
+    public String getAddressStreet() {
+        return addressStreet;
     }
 
-    public void setStreet(String street) {
-        this.street = street;
+    public void setAddressStreet(String addressStreet) {
+        this.addressStreet = addressStreet;
     }
 
-    public int getHouseNumber() {
-        return houseNumber;
+    public int getAddressHouseNumber() {
+        return addressHouseNumber;
     }
 
-    public void setHouseNumber(int houseNumber) {
-        this.houseNumber = houseNumber;
+    public void setAddressHouseNumber(int addressHouseNumber) {
+        this.addressHouseNumber = addressHouseNumber;
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuffer("Address {")
+                .append("city='")
+                .append(addressCity)
+                .append("', street='")
+                .append(addressStreet)
+                .append("', addressHouseNumber=")
+                .append(addressHouseNumber)
+                .append('}')
+                .toString();
     }
 }
