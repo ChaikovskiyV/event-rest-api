@@ -11,5 +11,5 @@ public interface BaseService<T extends BaseEntity> {
 
     List<T> findByParameters(Map<String, String> searchParams);
 
-    boolean delete(long id);
+    void delete(long id);
 }
