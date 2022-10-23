@@ -2,6 +2,8 @@ package com.example.eventservice.controller;
 
 import com.example.eventservice.dto.EventDto;
 import com.example.eventservice.entity.Event;
+import com.example.eventservice.exception.ApplicationNotValidDataException;
+import com.example.eventservice.exception.ErrorMessages;
 import com.example.eventservice.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -26,6 +28,10 @@ public class EventController {
 
     @PostMapping
     public HttpEntity<Event> registerEvent(@Valid @RequestBody EventDto eventDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ApplicationNotValidDataException(ErrorMessages.NOT_CORRECT_EVENT_DATA, bindingResult);
+        }
+
         Event event = eventService.createEvent(eventDto);
 
         return new ResponseEntity<>(event, HttpStatus.CREATED);
@@ -39,18 +45,18 @@ public class EventController {
     }
 
     @GetMapping
-    public List<Event> findEvents(@RequestParam(name = "topic", required = false) String topic,
-                                  @RequestParam(name = "time", required = false) String time,
+    public List<Event> findEvents(@RequestParam(name = "eventTopic", required = false) String eventTopic,
+                                  @RequestParam(name = "eventDate", required = false) String eventDate,
                                   @RequestParam(name = "organizer", required = false) String organizer,
                                   @RequestParam(name = "sort", required = false) String sort) {
 
-        Map<String, String> searchParams = new HashMap<>();
-        searchParams.put(TOPIC, topic);
-        searchParams.put(TIME, time);
-        searchParams.put(ORGANIZER, organizer);
-        searchParams.put(SORT, sort);
+        Map<String, String> requestParams = new HashMap<>();
+        requestParams.put(EVENT_TOPIC, eventTopic);
+        requestParams.put(EVENT_DATE, eventDate);
+        requestParams.put(ORGANIZER, organizer);
+        requestParams.put(SORT, sort);
 
-        return eventService.findByParameters(searchParams);
+        return eventService.findByParameters(requestParams);
     }
 
     @PutMapping("/{id}")
