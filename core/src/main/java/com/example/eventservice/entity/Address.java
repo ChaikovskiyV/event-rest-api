@@ -5,14 +5,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
-import java.util.*;
+import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
+@Table(name = "addresses")
 public class Address extends BaseEntity {
 
-    private String city;
-    private String street;
-    private int houseNumber;
+    private String addressCity;
+    private String addressStreet;
+    private int addressHouseNumber;
 
     @OneToMany(mappedBy = "address", cascade = CascadeType.REMOVE)
     @JsonIgnore
@@ -22,35 +26,35 @@ public class Address extends BaseEntity {
         events = new ArrayList<>();
     }
 
-    public Address(String city, String street, int houseNumber) {
-        this.city = city;
-        this.street = street;
-        this.houseNumber = houseNumber;
+    public Address(String addressCity, String addressStreet, int addressHouseNumber) {
+        this.addressCity = addressCity;
+        this.addressStreet = addressStreet;
+        this.addressHouseNumber = addressHouseNumber;
         events = new ArrayList<>();
     }
 
-    public String getCity() {
-        return city;
+    public String getAddressCity() {
+        return addressCity;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setAddressCity(String city) {
+        this.addressCity = city;
     }
 
-    public String getStreet() {
-        return street;
+    public String getAddressStreet() {
+        return addressStreet;
     }
 
-    public void setStreet(String street) {
-        this.street = street;
+    public void setAddressStreet(String street) {
+        this.addressStreet = street;
     }
 
-    public int getHouseNumber() {
-        return houseNumber;
+    public int getAddressHouseNumber() {
+        return addressHouseNumber;
     }
 
-    public void setHouseNumber(int houseNumber) {
-        this.houseNumber = houseNumber;
+    public void setAddressHouseNumber(int houseNumber) {
+        this.addressHouseNumber = houseNumber;
     }
 
     public List<Event> getEvents() {
@@ -66,24 +70,25 @@ public class Address extends BaseEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Address address = (Address) o;
-        return houseNumber == address.houseNumber && city.equals(address.city) && street.equals(address.street);
+        return addressHouseNumber == address.addressHouseNumber && Objects.equals(addressCity, address.addressCity) &&
+                Objects.equals(addressStreet, address.addressStreet);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(city, street, houseNumber);
+        return Objects.hash(addressCity, addressStreet, addressHouseNumber);
     }
 
     @Override
     public String toString() {
         return new StringBuffer("Address{")
                 .append(super.toString())
-                .append("city='")
-                .append(city)
-                .append(", street='")
-                .append(street)
-                .append(", houseNumber=")
-                .append(houseNumber)
+                .append("addressCity='")
+                .append(addressCity)
+                .append("', addressStreet='")
+                .append(addressStreet)
+                .append("', addressHouseNumber=")
+                .append(addressHouseNumber)
                 .append('}')
                 .toString();
     }
