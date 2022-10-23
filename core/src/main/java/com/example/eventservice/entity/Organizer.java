@@ -3,18 +3,20 @@ package com.example.eventservice.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Table(name = "organizers")
 public class Organizer extends BaseEntity {
-    private String name;
-    private String email;
-    private String telephoneNumber;
+    private String organizerName;
+    private String organizerEmail;
+    private String organizerTelephoneNumber;
 
-    @ManyToMany(mappedBy = "organizers")
+    @OneToMany(mappedBy = "organizer")
     @JsonIgnore
     private List<Event> events;
 
@@ -22,35 +24,35 @@ public class Organizer extends BaseEntity {
         events = new ArrayList<>();
     }
 
-    public Organizer(String name, String email, String telephoneNumber) {
-        this.name = name;
-        this.email = email;
-        this.telephoneNumber = telephoneNumber;
+    public Organizer(String organizerName, String organizerEmail, String organizerTelephoneNumber) {
+        this.organizerName = organizerName;
+        this.organizerEmail = organizerEmail;
+        this.organizerTelephoneNumber = organizerTelephoneNumber;
         events = new ArrayList<>();
     }
 
-    public String getName() {
-        return name;
+    public String getOrganizerName() {
+        return organizerName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setOrganizerName(String name) {
+        this.organizerName = name;
     }
 
-    public String getEmail() {
-        return email;
+    public String getOrganizerEmail() {
+        return organizerEmail;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setOrganizerEmail(String email) {
+        this.organizerEmail = email;
     }
 
-    public String getTelephoneNumber() {
-        return telephoneNumber;
+    public String getOrganizerTelephoneNumber() {
+        return organizerTelephoneNumber;
     }
 
-    public void setTelephoneNumber(String telephoneNumber) {
-        this.telephoneNumber = telephoneNumber;
+    public void setOrganizerTelephoneNumber(String telephoneNumber) {
+        this.organizerTelephoneNumber = telephoneNumber;
     }
 
     public List<Event> getEvents() {
@@ -66,25 +68,26 @@ public class Organizer extends BaseEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Organizer organizer = (Organizer) o;
-        return name.equals(organizer.name) && email.equals(organizer.email) && telephoneNumber.equals(organizer.telephoneNumber);
+        return Objects.equals(organizerName, organizer.organizerName) && Objects.equals(organizerEmail, organizer.organizerEmail) &&
+                Objects.equals(organizerTelephoneNumber, organizer.organizerTelephoneNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, email, telephoneNumber);
+        return Objects.hash(organizerName, organizerEmail, organizerTelephoneNumber);
     }
 
     @Override
     public String toString() {
         return new StringBuffer("Organizer{")
                 .append(super.toString())
-                .append("name='")
-                .append(name)
-                .append(", email='")
-                .append(email)
-                .append(", telephoneNumber='")
-                .append(telephoneNumber)
-                .append('}')
+                .append("organizerName='")
+                .append(organizerName)
+                .append("', organizerEmail='")
+                .append(organizerEmail)
+                .append("', organizerTelephoneNumber='")
+                .append(organizerTelephoneNumber)
+                .append("'}")
                 .toString();
     }
 }
