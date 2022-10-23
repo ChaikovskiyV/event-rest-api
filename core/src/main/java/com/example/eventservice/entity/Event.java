@@ -6,20 +6,17 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Table(name = "events")
 public class Event extends BaseEntity {
-    private String topic;
-    private String description;
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "events_organizers",
-            joinColumns = @JoinColumn(name = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "organizer_id"))
-    private Set<Organizer> organizers;
+    private String eventTopic;
+    private String eventDescription;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "organizer_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Organizer organizer;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime eventDate;
     @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -28,39 +25,38 @@ public class Event extends BaseEntity {
     private Address address;
 
     public Event() {
-        organizers = new HashSet<>();
     }
 
-    public Event(String topic, String description, Set<Organizer> organizers, LocalDateTime eventDate, Address address) {
-        this.topic = topic;
-        this.description = description;
-        this.organizers = organizers;
+    public Event(String eventTopic, String eventDescription, Organizer organizer, LocalDateTime eventDate, Address address) {
+        this.eventTopic = eventTopic;
+        this.eventDescription = eventDescription;
+        this.organizer = organizer;
         this.eventDate = eventDate;
         this.address = address;
     }
 
-    public String getTopic() {
-        return topic;
+    public String getEventTopic() {
+        return eventTopic;
     }
 
-    public void setTopic(String topic) {
-        this.topic = topic;
+    public void setEventTopic(String topic) {
+        this.eventTopic = topic;
     }
 
-    public String getDescription() {
-        return description;
+    public String getEventDescription() {
+        return eventDescription;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setEventDescription(String description) {
+        this.eventDescription = description;
     }
 
-    public Set<Organizer> getOrganizers() {
-        return organizers;
+    public Organizer getOrganizer() {
+        return organizer;
     }
 
-    public void setOrganizers(Set<Organizer> organizers) {
-        this.organizers = organizers;
+    public void setOrganizer(Organizer organizer) {
+        this.organizer = organizer;
     }
 
     public LocalDateTime getEventDate() {
@@ -85,14 +81,14 @@ public class Event extends BaseEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Event event = (Event) o;
-        return Objects.equals(topic, event.topic) && Objects.equals(description, event.description) &&
-                Objects.equals(organizers, event.organizers) && Objects.equals(eventDate, event.eventDate) &&
+        return Objects.equals(eventTopic, event.eventTopic) && Objects.equals(eventDescription, event.eventDescription) &&
+                Objects.equals(organizer, event.organizer) && Objects.equals(eventDate, event.eventDate) &&
                 Objects.equals(address, event.address);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(topic, description, organizers, eventDate, address);
+        return Objects.hash(eventTopic, eventDescription, organizer, eventDate, address);
     }
 
     @Override
@@ -100,12 +96,12 @@ public class Event extends BaseEntity {
         return new StringBuffer()
                 .append("Event{")
                 .append(super.toString())
-                .append("topic='")
-                .append(topic)
-                .append(", description='")
-                .append(description)
-                .append(", organizers=")
-                .append(organizers)
+                .append("eventTopic='")
+                .append(eventTopic)
+                .append("', eventDescription='")
+                .append(eventDescription)
+                .append("', organizer=")
+                .append(organizer)
                 .append(", eventDate=")
                 .append(eventDate)
                 .append(", address=")
