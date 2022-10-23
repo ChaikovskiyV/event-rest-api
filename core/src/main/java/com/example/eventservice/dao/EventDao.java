@@ -9,9 +9,9 @@ public interface EventDao extends BaseDao<Event> {
 
     Event insertEvent(Event event);
 
-    List<Event> findEventByTopic(String topic);
+    List<Event> findEventByTopic(String topic, String sortParams);
 
-    List<Event> findEventByOrganizerName(String organizerName);
+    List<Event> findEventByOrganizerName(String organizerName, String sortParams);
 
-    List<Event> findEventByDescription(LocalDateTime eventDate);
+    List<Event> findEventByDate(LocalDateTime eventDate, String sortParams);
 }
