@@ -1,4 +1,4 @@
-package com.example.eventservice.util.entityfactory;
+package com.example.eventservice.entity.entityfactory;
 
 import com.example.eventservice.dto.AddressDto;
 import com.example.eventservice.dto.EventDto;
@@ -14,20 +14,20 @@ import java.time.LocalDateTime;
 
 @Component
 public class EventEntityFactory implements EntityFactory<Event, EventDto> {
-    private final EntityFactory<Organizer, OrganizerDto> organizerBuilder;
-    private final EntityFactory<Address, AddressDto> addressBuilder;
+    private final EntityFactory<Organizer, OrganizerDto> organizerFactory;
+    private final EntityFactory<Address, AddressDto> addressFactory;
 
     @Autowired
-    public EventEntityFactory(EntityFactory<Organizer, OrganizerDto> organizerBuilder,
-                              EntityFactory<Address, AddressDto> addressBuilder) {
-        this.organizerBuilder = organizerBuilder;
-        this.addressBuilder = addressBuilder;
+    public EventEntityFactory(OrganizerEntityFactory organizerFactory,
+                              AddressEntityFactory addressFactory) {
+        this.organizerFactory = organizerFactory;
+        this.addressFactory = addressFactory;
     }
 
     @Override
     public Event buildEntityFromDto(EventDto dto) {
-        Organizer organizer = organizerBuilder.buildEntityFromDto(dto.getOrganizer());
-        Address eventAddress = addressBuilder.buildEntityFromDto(dto.getAddress());
+        Organizer organizer = organizerFactory.buildEntityFromDto(dto.getOrganizer());
+        Address eventAddress = addressFactory.buildEntityFromDto(dto.getAddress());
         LocalDateTime eventDate = StringDateParser.parseStringToDate(dto.getEventDate());
 
         return new Event(dto.getEventTopic(), dto.getEventDescription(), organizer, eventDate, eventAddress);

@@ -1,4 +1,4 @@
-package com.example.eventservice.util.entityfactory;
+package com.example.eventservice.entity.entityfactory;
 
 import com.example.eventservice.dto.BaseDto;
 import com.example.eventservice.entity.BaseEntity;
