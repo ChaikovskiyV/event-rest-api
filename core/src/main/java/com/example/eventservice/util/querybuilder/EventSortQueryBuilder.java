@@ -15,36 +15,37 @@ public class EventSortQueryBuilder implements SortQueryBuilder {
     public static final String ORGANIZER_PREFIX = "e.organizer.";
     public static final String DEFAULT_SORT = "e.eventDate desc";
     private static final List<String> eventParameters = List.of(EVENT_TOPIC, ORGANIZER_NAME, EVENT_DATE);
-    private final DataValidator validator;
+    private DataValidator validator;
 
     @Autowired
     public EventSortQueryBuilder(DataValidator validator) {
         this.validator = validator;
     }
 
+    public EventSortQueryBuilder() {
+    }
+
     @Override
     public String buildSortParamString(String sortParameters) {
-        if (sortParameters == null) {
-            return DEFAULT_SORT;
-        }
-
         StringBuilder sortParamStrBuilder = new StringBuilder();
 
-        List<String> sortParamList = Arrays.stream(sortParameters.split(COMA_DELIMITER))
-                .filter(param -> validator.isRequestParamNameValid(param) && isSuchParamExist(param))
-                .toList();
+        if (sortParameters != null) {
+            List<String> sortParamList = Arrays.stream(sortParameters.split(COMA_DELIMITER))
+                    .filter(param -> validator.isRequestParamNameValid(param) && isSuchParamExist(param))
+                    .toList();
 
-        for (int i = 0; i < sortParamList.size(); i++) {
-            addParameterPrefix(sortParamStrBuilder, sortParamList.get(i));
+            for (int i = 0; i < sortParamList.size(); i++) {
+                addParameterPrefix(sortParamStrBuilder, sortParamList.get(i));
 
-            if (i > 0 && i <= sortParamList.size() - 1) {
-                sortParamStrBuilder.append(COMA_DELIMITER).append(sortParamList.get(i));
-            } else {
-                sortParamStrBuilder.append(sortParamList.get(i));
+                if (i < sortParamList.size() - 1) {
+                    sortParamStrBuilder.append(sortParamList.get(i)).append(COMA_DELIMITER);
+                } else {
+                    sortParamStrBuilder.append(sortParamList.get(i));
+                }
             }
         }
 
-        return sortParamStrBuilder.toString();
+        return sortParamStrBuilder.isEmpty() ? DEFAULT_SORT : sortParamStrBuilder.toString();
     }
 
     private boolean isSuchParamExist(String param) {

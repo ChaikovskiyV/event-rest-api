@@ -9,11 +9,14 @@ import com.example.eventservice.dto.OrganizerDto;
 import com.example.eventservice.entity.Address;
 import com.example.eventservice.entity.Event;
 import com.example.eventservice.entity.Organizer;
+import com.example.eventservice.entity.entityfactory.AddressEntityFactory;
+import com.example.eventservice.entity.entityfactory.EntityFactory;
+import com.example.eventservice.entity.entityfactory.EventEntityFactory;
+import com.example.eventservice.entity.entityfactory.OrganizerEntityFactory;
 import com.example.eventservice.exception.ApplicationDuplicateException;
 import com.example.eventservice.exception.ApplicationNotFoundException;
 import com.example.eventservice.exception.ApplicationNotValidDataException;
 import com.example.eventservice.service.EventService;
-import com.example.eventservice.util.entityfactory.EntityFactory;
 import com.example.eventservice.util.querybuilder.EventSortQueryBuilder;
 import com.example.eventservice.util.validator.DataValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static com.example.eventservice.dao.ParamNames.*;
 import static com.example.eventservice.exception.ErrorMessages.*;
@@ -36,9 +36,9 @@ public class EventServiceImpl implements EventService {
     private final OrganizerDao organizerDao;
     private final AddressDao addressDao;
     private final DataValidator dataValidator;
-    private final EntityFactory<Event, EventDto> eventEntityFactory;
-    private final EntityFactory<Organizer, OrganizerDto> organizerBuilder;
-    private final EntityFactory<Address, AddressDto> addressBuilder;
+    private final EntityFactory<Event, EventDto> eventFactory;
+    private final EntityFactory<Organizer, OrganizerDto> organizerFactory;
+    private final EntityFactory<Address, AddressDto> addressFactory;
     private final EventSortQueryBuilder queryBuilder;
 
     @Autowired
@@ -46,16 +46,17 @@ public class EventServiceImpl implements EventService {
                             OrganizerDao organizerDao,
                             AddressDao addressDao,
                             DataValidator dataValidator,
-                            EntityFactory<Event, EventDto> eventEntityFactory,
-                            EntityFactory<Organizer, OrganizerDto> organizerBuilder,
-                            EntityFactory<Address, AddressDto> addressBuilder, EventSortQueryBuilder queryBuilder) {
+                            EventEntityFactory eventFactory,
+                            OrganizerEntityFactory organizerFactory,
+                            AddressEntityFactory addressEntityFactory,
+                            EventSortQueryBuilder queryBuilder) {
         this.eventDao = eventDao;
         this.organizerDao = organizerDao;
         this.addressDao = addressDao;
         this.dataValidator = dataValidator;
-        this.eventEntityFactory = eventEntityFactory;
-        this.organizerBuilder = organizerBuilder;
-        this.addressBuilder = addressBuilder;
+        this.eventFactory = eventFactory;
+        this.organizerFactory = organizerFactory;
+        this.addressFactory = addressEntityFactory;
         this.queryBuilder = queryBuilder;
     }
 
@@ -72,14 +73,16 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<Event> findByParameters(Map<String, String> requestParams) {
-        List<Event> events;
+        List<Event> events = new ArrayList<>();
 
         String eventTopic = requestParams.get(EVENT_TOPIC);
         String eventTime = requestParams.get(EVENT_DATE);
         String eventOrganizerName = requestParams.get(ORGANIZER);
         String sortParams = queryBuilder.buildSortParamString(requestParams.get(SORT));
 
-        if (eventTopic != null && dataValidator.isEventTopicValid(eventTopic)) {
+        if (eventTopic == null && eventTime == null && eventOrganizerName == null) {
+            events = eventDao.findAll(sortParams);
+        } else if (eventTopic != null && dataValidator.isEventTopicValid(eventTopic)) {
             events = eventDao.findEventByTopic(eventTopic, sortParams);
             events = filterEventsByTime(events, eventTime);
             events = filterEventsByOrganizerName(events, eventOrganizerName);
@@ -88,8 +91,6 @@ public class EventServiceImpl implements EventService {
             events = filterEventsByOrganizerName(events, eventOrganizerName);
         } else if (eventOrganizerName != null && dataValidator.isNameValid(eventOrganizerName)) {
             events = eventDao.findEventByOrganizerName(eventOrganizerName, sortParams);
-        } else {
-            events = eventDao.findAll(sortParams);
         }
 
         return events;
@@ -115,7 +116,7 @@ public class EventServiceImpl implements EventService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public Event createEvent(EventDto eventDto) {
-        Event event = eventEntityFactory.buildEntityFromDto(eventDto);
+        Event event = eventFactory.buildEntityFromDto(eventDto);
 
         if (isTimeLeft(event.getEventDate())) {
             throw new ApplicationNotValidDataException(TIME_LEFT, event.getEventDate());
@@ -157,12 +158,12 @@ public class EventServiceImpl implements EventService {
                 }
             } else if (paramName.equals(ORGANIZER)) {
                 OrganizerDto organizerDto = (OrganizerDto) paramValue;
-                Organizer organizer = findTheSameOrganizer(organizerBuilder.buildEntityFromDto(organizerDto));
+                Organizer organizer = findTheSameOrganizer(organizerFactory.buildEntityFromDto(organizerDto));
 
                 current.setOrganizer(organizer);
             } else if (paramName.equals(ADDRESS)) {
                 AddressDto addressDto = (AddressDto) paramValue;
-                Address address = findTheSameAddress(addressBuilder.buildEntityFromDto(addressDto));
+                Address address = findTheSameAddress(addressFactory.buildEntityFromDto(addressDto));
 
                 current.setAddress(address);
             }

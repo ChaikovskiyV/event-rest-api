@@ -10,7 +10,7 @@ public class DataValidatorImpl implements DataValidator {
     private static final String NAME_REGEX = "[^><]{3,20}";
     private static final String TOPIC_REGEX = "[^><]{5,50}";
     private static final String DESCRIPTION_REGEX = "[^><]{20,200}";
-    private static final String DATE_REGEX = "\\d{2}-\\d{2}\\s\\d{2}-\\d{2}-\\d{4}";
+    private static final String DATE_REGEX = "(([01]\\d)|(2[0-3]))-[0-5]\\d ((0[1-9])|([1-2]\\d)|(3[01]))-((0[1-9])|(1[0-2]))-\\d{4}";
     private static final String TELEPHONE_NUM_REGEX = "\\+\\d{12}";
     private static final String EMAIL_REGEX = "[^><].+@\\w{2,}\\.\\w{2,}";
     private static final String REQUEST_PARAM_NAME_REGEX = "[\\w\\s]{3,}";
