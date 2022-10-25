@@ -80,4 +80,4 @@ ON UPDATE cascade ON DELETE no action
 2) pull this project to your repository;
 3) change the 'spring.datasource.password' property in the 'src/main/resources/application.properties' file to meaning that suits your database;
 4) open terminal, go to the package with this api and run the command ./gradlew bootRun;
-5) by default, this api runs on the port 8088, if we need another port, we need to change the property 'server.port' to meaning that fits you.
+5) by default, this api runs on the port 8088, if you need another port, you can change the property 'server.port' in the 'src/main/resources/application.properties' file to meaning that suits you.
