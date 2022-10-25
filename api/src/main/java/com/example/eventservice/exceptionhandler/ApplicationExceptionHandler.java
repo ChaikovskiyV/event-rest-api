@@ -1,4 +1,4 @@
-package com.example.eventservice.controller.exceptionhandler;
+package com.example.eventservice.exceptionhandler;
 
 import com.example.eventservice.exception.ApplicationDuplicateException;
 import com.example.eventservice.exception.ApplicationNotFoundException;

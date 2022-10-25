@@ -1,4 +1,4 @@
-package com.example.eventservice.controller.exceptionhandler;
+package com.example.eventservice.exceptionhandler;
 
 public class CustomExceptionDataObject {
     private int errorCode;
