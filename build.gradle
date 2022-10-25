@@ -1,9 +1,8 @@
-import org.springframework.boot.gradle.plugin.SpringBootPlugin
-
 plugins {
     id 'org.springframework.boot' version '2.7.4'
     id 'io.spring.dependency-management' version '1.0.14.RELEASE'
     id 'java'
+    id 'com.palantir.docker' version '0.22.1'
 }
 
 group = 'com.example'
@@ -14,22 +13,6 @@ repositories {
     mavenCentral()
 }
 
-subprojects {
-    dependencyManagement {
-        imports {
-            mavenBom(SpringBootPlugin.BOM_COORDINATES)
-        }
-    }
-
-    group = 'com.example'
-    version = '0.0.1-SNAPSHOT'
-    sourceCompatibility = '17'
-
-    repositories {
-        mavenCentral()
-    }
-}
-
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-parent:2.7.4'
     implementation project(':core')
@@ -37,5 +20,16 @@ dependencies {
 }
 
 springBoot {
-    mainClass = 'com.example.eventservice.configuration.EventServiceApplication'
+    mainClass = 'EventServiceApplication'
+}
+
+bootRun {
+    main = 'com.example.eventservice.EventServiceApplication'
+}
+
+docker {
+    name 'event-rest-api'
+    dockerfile file("/docker/Dockerfile")
+    copySpec().from(jar).rename(".*", "eventservice.jar")
+    buildArgs(['JAR_FILE': "eventservice.jar"])
 }
