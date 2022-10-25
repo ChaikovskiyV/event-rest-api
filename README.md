@@ -1,6 +1,7 @@
 Event rest api
 
 The api processes http requests from a client api and sends requests to the database to perform CRUD operations with data.
+This api was created using Gradle, Java 17, PostgreSQL, Spring Boot and Hibernate.
 
 This api handle follow endpoints:
 
@@ -42,7 +43,7 @@ a request body should contain json with fields we need to update;
 
 To run this rest api you need:
 
-1) create a database event_base in PostresQL and run follow script:
+1) create a database event_base in PostreSQL and run follow script:
 
 CREATE TABlE addresses (
 id bigint NOT NULL,
