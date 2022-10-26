@@ -71,6 +71,11 @@ public class EventServiceImpl implements EventService {
         });
     }
 
+    /**
+     * Perform query to database and filter data depending on provided parameters
+     * @param requestParams - Map with parameters. If it's empty, the findAll query will be sent to database.
+     * @return List of Event objects that match request parameters.
+     */
     @Override
     public List<Event> findByParameters(Map<String, String> requestParams) {
         List<Event> events = new ArrayList<>();
@@ -129,6 +134,9 @@ public class EventServiceImpl implements EventService {
         return eventDao.insertEvent(event);
     }
 
+    /**
+     * Check whether chosen address and data are busy.
+     */
     private boolean isPlaceAlreadyTaken(Address eventAddress, LocalDateTime eventTime) {
         List<Event> events = eventDao.findEventByDate(eventTime, null);
 
@@ -140,6 +148,9 @@ public class EventServiceImpl implements EventService {
         return dateTime.isBefore(LocalDateTime.now());
     }
 
+    /**
+     * Replace changed fields in current event.
+     */
     private Event buildUpdatedEvent(Event current, EventDto eventDto) {
         Map<String, Object> paramsForUpdate = buildEventParamsMapForUpdate(eventDto);
 
@@ -171,6 +182,10 @@ public class EventServiceImpl implements EventService {
         return current;
     }
 
+    /**
+     * Builds map with not null parameters for updating from dto.
+     * @Throws ApplicationNotValidDataException - if not correct parameters are provided.
+     */
     private Map<String, Object> buildEventParamsMapForUpdate(EventDto eventDto) {
         Map<String, Object> paramsForUpdate = new HashMap<>();
 
@@ -203,6 +218,9 @@ public class EventServiceImpl implements EventService {
         return paramsForUpdate;
     }
 
+    /**
+     * Check parameters for updating and build map with not correct parameters.
+     */
     private Map<String, Object> buildWrongParamsMap(Map<String, Object> params) {
         Map<String, Object> wrongParams = new HashMap<>();
 
@@ -222,6 +240,9 @@ public class EventServiceImpl implements EventService {
         return wrongParams;
     }
 
+    /**
+     * Check whether such a provided organizer already exists, and if so, return the found organizer.
+     */
     private Organizer findTheSameOrganizer(Organizer organizer) {
         List<Organizer> organizers = organizerDao.findOrganizerByName(organizer.getOrganizerName());
 
@@ -231,6 +252,9 @@ public class EventServiceImpl implements EventService {
                 .orElse(organizer);
     }
 
+    /**
+     * Check whether such a provided address already exists, and if so, return the found address.
+     */
     private Address findTheSameAddress(Address address) {
         List<Address> addresses = addressDao.findAddressByCity(address.getAddressCity());
 

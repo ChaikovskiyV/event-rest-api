@@ -25,12 +25,17 @@ public class EventSortQueryBuilder implements SortQueryBuilder {
     public EventSortQueryBuilder() {
     }
 
+    /**
+     * Prepare the sorting part of sorted query from a provided string.
+     * @param sortParam - a sort parameter provided from a http request.
+     * @return - the part of a query with sorting parameters or empty string if the sortParam is null.
+     */
     @Override
-    public String buildSortParamString(String sortParameters) {
+    public String buildSortParamString(String sortParam) {
         StringBuilder sortParamStrBuilder = new StringBuilder();
 
-        if (sortParameters != null) {
-            List<String> sortParamList = Arrays.stream(sortParameters.split(COMA_DELIMITER))
+        if (sortParam != null) {
+            List<String> sortParamList = Arrays.stream(sortParam.split(COMA_DELIMITER))
                     .filter(param -> validator.isRequestParamNameValid(param) && isSuchParamExist(param))
                     .toList();
 
@@ -48,6 +53,9 @@ public class EventSortQueryBuilder implements SortQueryBuilder {
         return sortParamStrBuilder.isEmpty() ? DEFAULT_SORT : sortParamStrBuilder.toString();
     }
 
+    /**
+     * Check if such a provided param exist at the list of parameters.
+     */
     private boolean isSuchParamExist(String param) {
         String paramName = param;
 
@@ -59,6 +67,7 @@ public class EventSortQueryBuilder implements SortQueryBuilder {
 
         return eventParameters.contains(paramName.trim());
     }
+
 
     private void addParameterPrefix(StringBuilder sortParamStrBuilder, String sortParam) {
         if (sortParam.contains(ORGANIZER)) {

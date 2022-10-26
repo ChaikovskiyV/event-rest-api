@@ -1,5 +1,8 @@
 package com.example.eventservice.dao;
 
+/**
+ *Contains constants with parameter names.
+ */
 public final class ParamNames {
     public static final String EVENT = "event";
     public static final String EVENT_TOPIC = "eventTopic";

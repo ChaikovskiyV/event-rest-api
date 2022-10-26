@@ -6,6 +6,12 @@ public interface SortQueryBuilder {
     String DESC = "desc";
     String ASC = "asc";
 
+    /**
+     * Add a part with sorting parameters to the query.
+     * @param query - the main part of query to database.
+     * @param sortParams - part of a query with sorting parameters, it can be null.
+     * @return - a sorted query, if sortParams is null, the provided query will be returned.
+     */
     default String buildSortQuery(String query, String sortParams) {
         String sortQuery;
 
@@ -20,5 +26,5 @@ public interface SortQueryBuilder {
         return sortQuery;
     }
 
-    String buildSortParamString(String sortParams);
+    String buildSortParamString(String sortParam);
 }

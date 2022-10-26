@@ -1,5 +1,8 @@
 package com.example.eventservice.dao;
 
+/**
+ * Contains constants with queries to the database.
+ */
 public final class DatabaseQueries {
     public static final String FIND_ALL_EVENTS = "FROM Event e";
     public static final String FIND_EVENT_BY_TOPIC = "FROM Event e WHERE e.eventTopic LIKE CONCAT('%', ?1, '%')";
