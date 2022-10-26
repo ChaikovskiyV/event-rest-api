@@ -3,19 +3,19 @@ Event rest api
 The api processes http requests from a client api and sends requests to the database to perform CRUD operations with data.
 This api was created using Gradle, Java 17, PostgreSQL, Spring Boot and Hibernate.
 
-This api handle follow endpoints:
+This api handle follow endpoints(for localhost):
 
 GET:
-- http://host:port/api/v1/events - get all events;\
+- http://localhost:port/api/v1/events - get all events;\
 this request can be complemented by parameters:
   - organizer - search by organizer name;
   - eventDate - search by event date (date has to match format 'HH-mm dd-MM-yyyy');
   - eventTopic - search by event topic;
   - sort - sorting by the organizer name, eventDate or(and) eventTopic fields (example([]-optional): sort=eventDate asc(desc)[, eventTopic asc(desc), organizerName asc(desc)]), by default, data is sorted by eventDate desc.
-- http://host:port/api/v1/events/id - get an event by id;
+- http://localhost:port/api/v1/events/id - get an event by id;
 
 POST:
-- http://host:port/api/v1/events - register(create) a new event, a request body should contain json like:\
+- http://localhost:port/api/v1/events - register(create) a new event, a request body should contain json like:\
 {"eventTopic":"",\
   "eventDescription":"",\
   "organizer":\
@@ -34,11 +34,11 @@ POST:
 }
 
 PUT:
-- http://host:port/api/v1/events/id - update the event with id,
+- http://localhost:port/api/v1/events/id - update the event with id,
 a request body should contain json with fields we need to update;
 
  DELETE:
-- http://host:port/api/v1/events/id - delete the event with id.
+- http://localhost:port/api/v1/events/id - delete the event with id.
 
 
 To run this rest api you need:
