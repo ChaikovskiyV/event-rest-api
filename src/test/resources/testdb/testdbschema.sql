@@ -30,12 +30,14 @@ CREATE TABLE events
     event_topic varchar(255) NOT NULL,
     event_description varchar(255) NOT NULL,
     event_date date NOT NULL,
+    address_id int8 NOT NULL,
+    organizer_id int8 NOT NULL,
     CONSTRAINT event_pkey PRIMARY KEY (id)
 );
 
 ALTER TABLE events
-    ADD CONSTRAINT address_fk FOREIGN KEY (address_id) REFERENCES public.address (id);
+    ADD CONSTRAINT address_fk FOREIGN KEY (address_id) REFERENCES public.addresses (id);
 ALTER TABLE events
-    ADD CONSTRAINT organizer_fk FOREIGN KEY (organizer_id) REFERENCES public.organizer (id);
+    ADD CONSTRAINT organizer_fk FOREIGN KEY (organizer_id) REFERENCES public.organizers (id);
 
-CREATE SEQUENCE HIBERNATE_SEQUENCE START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE HIBERNATE_SEQUENCE START WITH 10 INCREMENT BY 1;
