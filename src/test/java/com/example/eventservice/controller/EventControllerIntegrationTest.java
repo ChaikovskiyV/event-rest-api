@@ -57,22 +57,66 @@ class EventControllerIntegrationTest {
     }
 
     @Test
-    void registerEvent() {
+    void registerEventTest() {
     }
 
     @Test
-    void findEventById() {
+    void registerEventTestWhenEventDataNotCorrect() {
     }
 
     @Test
-    void findEvents() {
+    void findEventByIdTest() {
     }
 
     @Test
-    void updateEvent() {
+    void findEventByIdTestWhenIdNotExists() {
     }
 
     @Test
-    void deleteEvent() {
+    void findEventByIdTestWhenIdNotCorrect() {
+    }
+
+    @Test
+    void findEventsTestWhenNoParametersProvided() {
+    }
+
+    @Test
+    void findEventsTestWhenEventTopicParamProvided() {
+    }
+
+    @Test
+    void findEventsTestWhenWrongEventTopicParamProvided() {
+    }
+
+    @Test
+    void findEventsTestWhenEventDateParamProvided() {
+    }
+
+    @Test
+    void findEventsTestWhenWrongEventDateParamProvided() {
+    }
+
+    @Test
+    void findEventsTestWhenEventOrganizerProvided() {
+    }
+
+    @Test
+    void findEventsTestWhenWrongEventOrganizerProvided() {
+    }
+
+    @Test
+    void updateEventTest() {
+    }
+
+    @Test
+    void updateEventTestWhenEventIdNotExists() {
+    }
+
+    @Test
+    void deleteEventTest() {
+    }
+
+    @Test
+    void deleteEventTestWhenEventIdNotExists() {
     }
 }
