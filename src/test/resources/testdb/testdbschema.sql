@@ -29,7 +29,7 @@ CREATE TABLE events
     id  int8 NOT NULL,
     event_topic varchar(255) NOT NULL,
     event_description varchar(255) NOT NULL,
-    event_date date NOT NULL,
+    event_date timestamp NOT NULL,
     address_id int8 NOT NULL,
     organizer_id int8 NOT NULL,
     CONSTRAINT event_pkey PRIMARY KEY (id)
