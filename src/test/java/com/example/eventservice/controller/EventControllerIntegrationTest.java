@@ -9,10 +9,7 @@ import com.example.eventservice.model.entity.Event;
 import com.example.eventservice.model.entity.Organizer;
 import com.example.eventservice.model.util.StringDateParser;
 import com.example.eventservice.testconfig.TestConfiguration;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -24,13 +21,13 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = EventServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Import(TestConfiguration.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class EventControllerIntegrationTest {
     public static final String LOCALHOST = "http://localhost:";
     public static final String URI = "/api/v1/events";
@@ -110,6 +107,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
+    @Order(16)
     void testRegisterEvent() {
         Event created = restTemplate.postForObject(url, eventDto, Event.class);
 
@@ -117,6 +115,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
+    @Order(1)
     void testRegisterEventWhenEventDataNotCorrect() {
         EventDto notCorrectEventDto = new EventDto(
                 "",
@@ -130,6 +129,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
+    @Order(2)
     void testFindEventById() {
         long id = 7;
         String parameterizedUrl = new StringBuilder(url).append('/')
@@ -141,6 +141,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
+    @Order(3)
     void testFindEventByIdWhenIdNotExists() {
         id = 1000;
         String parameterizedUrl = new StringBuilder(url).append('/')
@@ -151,6 +152,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
+    @Order(4)
     void testFindEventByIdWhenIdNotCorrect() {
         id = 0;
         String parameterizedUrl = new StringBuilder(url).append('/')
@@ -161,6 +163,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
+    @Order(5)
     void testFindEventsWhenNoParametersProvided() {
         Event[] events = restTemplate.getForObject(url, Event[].class);
 
@@ -168,6 +171,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
+    @Order(6)
     void testFindEventsWhenEventTopicParamProvided() {
         String parameterizedUrl = new StringBuilder(url).append('?')
                 .append(EVENT_TOPIC_PARAM)
@@ -180,6 +184,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
+    @Order(7)
     void testFindEventsWhenWrongEventTopicParamProvided() {
         String parameterizedUrl = new StringBuilder(url).append('?')
                 .append(EVENT_TOPIC_PARAM)
@@ -192,6 +197,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
+    @Order(8)
     void testFindEventsWhenEventDateParamProvided() {
         String parameterizedUrl = new StringBuilder(url).append('?')
                 .append(EVENT_DATE_PARAM)
@@ -204,6 +210,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
+    @Order(9)
     void testFindEventsWhenWrongEventDateParamProvided() {
         String parameterizedUrl = new StringBuilder(url).append('?')
                 .append(EVENT_DATE_PARAM)
@@ -216,6 +223,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
+    @Order(10)
     void testFindEventsWhenEventOrganizerProvided() {
         String parameterizedUrl = new StringBuilder(url).append('?')
                 .append(ORGANIZER_PARAM)
@@ -228,6 +236,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
+    @Order(11)
     void testFindEventsWhenWrongEventOrganizerProvided() {
         String parameterizedUrl = new StringBuilder(url).append('?')
                 .append(ORGANIZER_PARAM)
@@ -240,6 +249,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
+    @Order(12)
     void testFindEventsWhenSortParamProvided() {
         String parameterizedUrl = new StringBuilder(url).append('?')
                 .append(SORT_PARAM)
@@ -252,6 +262,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
+    @Order(13)
     void testFindEventsWhenWrongSortParamProvided() {
         String parameterizedUrl = new StringBuilder(url).append('?')
                 .append(SORT_PARAM)
@@ -264,6 +275,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
+    @Order(17)
     void testUpdateEvent() {
         int id = 8;
         String parameterizedUrl = new StringBuilder(url).append("/{id}").toString();
@@ -285,6 +297,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
+    @Order(14)
     void testUpdateEventWhenEventIdNotExists() {
         int id = 1000;
         String parameterizedUrl = new StringBuilder(url).append("/{id}").toString();
@@ -304,6 +317,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
+    @Order(18)
     void testDeleteEvent() {
         int id = 7;
         String parameterizedUrl = new StringBuilder(url).append('/')
@@ -318,6 +332,7 @@ class EventControllerIntegrationTest {
     }
 
     @Test
+    @Order(15)
     void testDeleteEventWhenEventIdNotExists() {
         int id = 1000;
         String parameterizedUrl = new StringBuilder(url).append('/')
