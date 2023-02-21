@@ -18,9 +18,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -261,12 +265,42 @@ class EventControllerIntegrationTest {
 
     @Test
     void testUpdateEvent() {
+        int id = 8;
+        String parameterizedUrl = new StringBuilder(url).append("/{id}").toString();
+        EventDto eventDto = new EventDto(
+                "How to be a doctor",
+                "About medicine best practice",
+                new OrganizerDto("Second", "second@second.com", "+375446116466"),
+                "17-10 10-04-2023",
+                new AddressDto("Gomel", "Vaneeva", 8)
+        );
+        HttpEntity<EventDto> httpEntity = new HttpEntity<>(eventDto);
+
+        ResponseEntity<Event> updated = restTemplate.exchange(parameterizedUrl, HttpMethod.PUT, httpEntity, Event.class, id);
+
+        assertTrue(updated.getBody() != null && updated.getBody().getId() != 0 &&
+                updated.getBody().getEventTopic().equals("How to be a doctor") &&
+                updated.getBody().getEventDate().equals(StringDateParser.parseStringToDate("17-10 10-04-2023")));
 
     }
 
     @Test
     void testUpdateEventWhenEventIdNotExists() {
+        int id = 1000;
+        String parameterizedUrl = new StringBuilder(url).append("/{id}").toString();
+        EventDto eventDto = new EventDto(
+                "How to be a doctor",
+                "About medicine best practice",
+                new OrganizerDto("Second", "second@second.com", "+375446116466"),
+                "17-10 10-04-2023",
+                new AddressDto("Gomel", "Vaneeva", 8)
+        );
+        HttpEntity<EventDto> httpEntity = new HttpEntity<>(eventDto);
 
+       ResponseEntity <Event> updated = restTemplate.exchange(parameterizedUrl, HttpMethod.PUT, httpEntity, Event.class, id);
+
+       assertTrue(updated.getBody() != null && updated.getBody().getId() == 0 &&
+               updated.getBody().getEventTopic() == null);
     }
 
     @Test
